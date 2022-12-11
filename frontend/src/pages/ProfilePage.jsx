@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button";
 
 import AuthContext from "../context/AuthContext";
 import AddProductModal from "../components/AddProductModal";
+import UpdateProductModal from "../components/UpdateProductModal";
 
 const ProfilePage = () => {
   let { user } = useContext(AuthContext);
@@ -16,6 +17,9 @@ const ProfilePage = () => {
   const [bids, setBids] = useState([""]);
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const handleUpdateModal = () => setShowUpdateModal(true);
+  const [temp, setTemp] = useState([""]);
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -44,6 +48,15 @@ const ProfilePage = () => {
     return data;
   };
 
+  const getInfo = async () => {
+    const info = await retrieveUserInfo();
+    if (info) {
+      setUserInfo(info.user);
+      setProducts(info.products);
+      setBids(info.bids);
+    }
+  };
+
   const addProduct = async (e) => {
     e.preventDefault();
     let response = await fetch("http://localhost:8000/api/product/item/", {
@@ -57,11 +70,54 @@ const ProfilePage = () => {
         created_by: user.user_id,
         category: e.target.category.value,
         biding_price: e.target.amount.value,
-        ends_at: e.target.ends_at.value
+        ends_at: e.target.ends_at.value,
       }),
     });
     if (response.status === 201) {
       alert("Product added!");
+      getInfo();
+    } else {
+      alert("something went wrong!");
+    }
+  };
+
+  const updateProduct = async (e) => {
+    e.preventDefault();
+    let response = await fetch(`http://localhost:8000/api/product/item/${e.target.product_id.value}/`, {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: e.target.title.value,
+        description: e.target.description.value,
+        created_by: user.user_id,
+        category: e.target.category.value,
+        biding_price: e.target.amount.value,
+        ends_at: e.target.ends_at.value,
+      }),
+    });
+    if (response.status === 200) {
+      alert("Product updated!");
+      getInfo();
+    } else {
+      alert("something went wrong!");
+    }
+  };
+
+  const deleteProduct = async (id) => {
+    let response = await fetch(
+      `http://localhost:8000/api/product/item/${id}/`,
+      {
+        method: "delete",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.status === 204) {
+      alert("Product deleted!");
+      getInfo();
     } else {
       alert("something went wrong!");
     }
@@ -113,13 +169,20 @@ const ProfilePage = () => {
                               variant="outline-primary"
                               size="sm"
                               style={{ float: "left" }}
+                              onClick={() => {
+                                handleUpdateModal();
+                                setTemp(product);
+                              }}
                             >
-                              View
+                              Update
                             </Button>
                             <Button
                               variant="outline-danger"
                               size="sm"
                               style={{ float: "right" }}
+                              onClick={() => {
+                                deleteProduct(product.id);
+                              }}
                             >
                               Delete
                             </Button>
@@ -164,6 +227,12 @@ const ProfilePage = () => {
         </Col>
       </Row>
       <AddProductModal addProduct={addProduct} show={show} setShow={setShow} />
+      <UpdateProductModal
+        updateProduct={updateProduct}
+        showUpdateModal={showUpdateModal}
+        setShowUpdateModal={setShowUpdateModal}
+        temp={temp}
+      />
     </>
   );
 };

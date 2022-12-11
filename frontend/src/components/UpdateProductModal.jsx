@@ -3,27 +3,37 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 
-const AddProductModal = ({ show, setShow, addProduct }) => {
+const UpdateProductModal = ({
+  showUpdateModal,
+  setShowUpdateModal,
+  updateProduct,
+  temp,
+}) => {
   function simulateNetworkRequest() {
     return new Promise((resolve) => setTimeout(resolve, 500));
   }
 
   const handleClose = () => {
     simulateNetworkRequest().then(() => {
-      setShow(false);
+      setShowUpdateModal(false);
     });
   };
   return (
     <>
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal show={showUpdateModal} onHide={handleClose} centered>
         <Modal.Body>
-          <Form onSubmit={addProduct}>
+          <Form onSubmit={updateProduct}>
+            <Form.Control
+              name="product_id"
+              type="hidden"
+              defaultValue={temp.id}
+            />
             <Form.Group className="mb-3">
               <Form.Label>Title</Form.Label>
               <Form.Control
                 name="title"
                 type="text"
-                placeholder="enter title"
+                defaultValue={temp.title}
                 autoFocus
               />
             </Form.Group>
@@ -32,7 +42,7 @@ const AddProductModal = ({ show, setShow, addProduct }) => {
               <Form.Control
                 name="description"
                 type="text"
-                placeholder="enter description"
+                defaultValue={temp.description}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -41,13 +51,15 @@ const AddProductModal = ({ show, setShow, addProduct }) => {
                 name="amount"
                 type="number"
                 step="0.01"
-                placeholder="enter biding amount"
+                defaultValue={temp.biding_price}
               />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Category</Form.Label>
               <Form.Select aria-label="Default select example" name="category">
-                <option selected disabled >Select Category</option>
+                <option selected disabled>
+                  Select Category
+                </option>
                 <option value="Cars">Cars</option>
                 <option value="Electronics">Electronics</option>
                 <option value="Others">Others</option>
@@ -58,6 +70,7 @@ const AddProductModal = ({ show, setShow, addProduct }) => {
               <Form.Control
                 name="ends_at"
                 type="date"
+                defaultValue={temp.ends_at}
               />
             </Form.Group>
             <Button
@@ -82,4 +95,4 @@ const AddProductModal = ({ show, setShow, addProduct }) => {
   );
 };
 
-export default AddProductModal;
+export default UpdateProductModal;

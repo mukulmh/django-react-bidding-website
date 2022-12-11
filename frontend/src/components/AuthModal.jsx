@@ -46,6 +46,7 @@ const AuthModal = ({ show, setShow }) => {
                     name="email"
                     type="email"
                     placeholder="name@example.com"
+                    required
                     autoFocus
                   />
                 </Form.Group>
@@ -55,6 +56,7 @@ const AuthModal = ({ show, setShow }) => {
                     name="password"
                     type="password"
                     placeholder="Password"
+                    required
                   />
                 </Form.Group>
                 <Button
@@ -84,6 +86,7 @@ const AuthModal = ({ show, setShow }) => {
                     name="email"
                     type="email"
                     placeholder="name@example.com"
+                    required
                     autoFocus
                   />
                 </Form.Group>
@@ -92,7 +95,8 @@ const AuthModal = ({ show, setShow }) => {
                   <Form.Control
                     name="phone"
                     type="number"
-                    placeholder="+8801712345678"
+                    placeholder="01712345678"
+                    required
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -101,6 +105,7 @@ const AuthModal = ({ show, setShow }) => {
                     name="fullname"
                     type="text"
                     placeholder="John Doe"
+                    required
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -109,6 +114,7 @@ const AuthModal = ({ show, setShow }) => {
                     name="password"
                     type="password"
                     placeholder="Password"
+                    required
                   />
                 </Form.Group>
                 <Button

@@ -23,6 +23,7 @@ const BidModal = ({ show, setShow, placeBid }) => {
               <Form.Control
                 name="amount"
                 type="number"
+                step="0.01"
                 placeholder="enter amount"
                 autoFocus
               />
