@@ -9,6 +9,7 @@ from app_products.models import Bid, Product
 from app_products.serializers import BidSerializer, ProductSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.db.models import Count
 
 
 
@@ -62,18 +63,36 @@ class UserLoginView(APIView):
 
 
 class UserProfileView(APIView):
-    def get(self, request):
-        id = request.data['id']
-        user = Account.objects.get(pk=id)
+    def get_object(self, id):
+        try:
+            user = Account.objects.get(pk = id)
+            return user
+        except Account.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def get(self, request, id):
+        try:
+            user = Account.objects.get(pk = id)
+        except Account.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
         if user is not None:
             products = Product.objects.filter(created_by=id).all()
             product_serializer = ProductSerializer(products, many=True)
-            bids = Bid.objects.filter(user=id).all()
-            bid_serializer = BidSerializer(bids, many=True)
+            bids = Bid.objects.all().select_related('product').filter(user=id)
+            data=[]
+            for bid in bids:
+                bid_data={}
+                counts = Bid.objects.all().filter(product=bid.product_id).values('product').annotate(total=Count('user'))
+                for count in counts:
+                    bid_data['bid_count'] = count['total']
+                    
+                bid_data['product_title'] = bid.product.title
+                bid_data['biding_amount'] = bid.amount
+                bid_data['starting_bid'] = bid.product.biding_price
+                data.append(bid_data)
+            print(data)
             serializer = UserSerializer(user)
-            context = {'user':serializer.data,'products':product_serializer.data,'bids':bid_serializer.data}
+            context = {'user':serializer.data,'products':product_serializer.data,'bids':data}
             products = context['products']
-            for product in products:
-                print(product['title'])
             return Response(context, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)

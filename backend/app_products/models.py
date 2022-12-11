@@ -3,7 +3,7 @@ from app_auth.models import Account
 
 # Create your models here.
 
-CATEGORY = (('Household','Household'), ('Electronics','Electronics'), ('Others','Others'))
+CATEGORY = (('Cars','Cars'), ('Electronics','Electronics'), ('Others','Others'))
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
@@ -28,6 +28,9 @@ class Bid(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('-amount',)
 
     def __str__(self):
         return self.id

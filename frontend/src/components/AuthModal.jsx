@@ -9,7 +9,7 @@ import AuthContext from "../context/AuthContext";
 
 const AuthModal = ({ show, setShow }) => {
   function simulateNetworkRequest() {
-    return new Promise((resolve) => setTimeout(resolve, 2000));
+    return new Promise((resolve) => setTimeout(resolve, 500));
   }
   let {loginUser, registerUser } = useContext(AuthContext);
 
@@ -113,12 +113,13 @@ const AuthModal = ({ show, setShow }) => {
                 </Form.Group>
                 <Button
                   variant="secondary"
-                  onClick={handleClose}
+                  onClick={modalClose}
                   style={{ float: "left" }}
                 >
                   Cancel
                 </Button>
                 <Button
+                  onClick={handleClose}
                   variant="primary"
                   style={{ float: "right" }}
                   type="submit"

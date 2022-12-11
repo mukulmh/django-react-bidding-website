@@ -4,6 +4,7 @@ from django.contrib import auth
 from rest_framework.decorators import api_view
 from .models import Bid, Product
 from app_products.serializers import BidSerializer, ProductSerializer
+from django.db.models import Count
 
 
 # Create your views here.
@@ -11,9 +12,31 @@ from app_products.serializers import BidSerializer, ProductSerializer
 @api_view(['GET','POST'])
 def product_list(request):
     if request.method == 'GET':
+        data = []
+        products = Product.objects.all()
+        for prod in products:
+            product_data ={}
+            
+            product_data['id']= prod.id
+            product_data['title']= prod.title
+            product_data['starting_bid'] = prod.biding_price
+            product_data['ends_at'] = prod.ends_at.strftime("%d-%m-%y %H:%M:%S")
+            counts = Bid.objects.all().filter(product=prod.id).values('product').annotate(total=Count('user'))
+            if counts:
+                for count in counts:
+                    product_data['total_bids'] = count['total']
+                highest_bidder = Bid.objects.all().select_related('user').filter(product=prod.id).first()
+                product_data['highest_bidder'] = highest_bidder.user.fullname
+                product_data['highest_bid'] = highest_bidder.amount
+            else:
+                product_data['total_bids'] = 0
+                product_data['highest_bidder'] = 'None'
+                product_data['highest_bid'] = prod.biding_price
+            data.append(product_data)
+        # print(data)
         product = Product.objects.all()
         serializer = ProductSerializer(product, many=True)
-        return Response(serializer.data)
+        return Response(data)
     if request.method == 'POST':
         serializer= ProductSerializer(data=request.data)
         if serializer.is_valid():

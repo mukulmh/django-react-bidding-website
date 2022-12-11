@@ -2,12 +2,15 @@ import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
+  let navigate = useNavigate();
+
   let [authTokens, setAuthTokens] = useState(
     localStorage.getItem("authTokens")
       ? JSON.parse(localStorage.getItem("authTokens"))
@@ -36,9 +39,10 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
+      navigate("/profile");
     } else {
       alert(data.msg);
-      console.log(data.msg)
+      console.log(data.msg);
     }
   };
 
@@ -61,9 +65,10 @@ export const AuthProvider = ({ children }) => {
       setAuthTokens(data);
       setUser(jwt_decode(data.access));
       localStorage.setItem("authTokens", JSON.stringify(data));
+      navigate("/profile");
     } else {
-    //   alert(JSON.stringify(data));
-      console.log((data))
+      alert(JSON.stringify(data));
+      // console.log(JSON.stringify(data))
     }
   };
 
@@ -71,6 +76,7 @@ export const AuthProvider = ({ children }) => {
     setAuthTokens(null);
     setUser(null);
     localStorage.removeItem("authTokens");
+    navigate("/");
   };
 
   let contextData = {
