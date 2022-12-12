@@ -18,9 +18,13 @@ const UpdateProductModal = ({
       setShowUpdateModal(false);
     });
   };
+  const modalClose = () => {
+    setShowUpdateModal(false);
+  };
+
   return (
     <>
-      <Modal show={showUpdateModal} onHide={handleClose} centered>
+      <Modal show={showUpdateModal} onHide={modalClose} centered>
         <Modal.Body>
           <Form onSubmit={updateProduct}>
             <Form.Control
@@ -75,13 +79,13 @@ const UpdateProductModal = ({
             </Form.Group>
             <Button
               variant="secondary"
-              onClick={handleClose}
+              onClick={modalClose}
               style={{ float: "left" }}
             >
               Cancel
             </Button>
             <Button
-              //   onClick={placeBid}
+              onClick={handleClose}
               variant="primary"
               style={{ float: "right" }}
               type="submit"

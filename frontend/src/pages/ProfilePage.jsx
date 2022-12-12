@@ -9,6 +9,7 @@ import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import AddProductModal from "../components/AddProductModal";
 import UpdateProductModal from "../components/UpdateProductModal";
+let Base_URL = "http://localhost:8000/api"
 
 const ProfilePage = () => {
   let { user } = useContext(AuthContext);
@@ -35,7 +36,7 @@ const ProfilePage = () => {
 
   const retrieveUserInfo = async () => {
     let response = await fetch(
-      `http://localhost:8000/api/auth/profile/${user.user_id}`,
+      `${Base_URL}/auth/profile/${user.user_id}`,
       {
         method: "get",
         headers: {
@@ -59,7 +60,7 @@ const ProfilePage = () => {
 
   const addProduct = async (e) => {
     e.preventDefault();
-    let response = await fetch("http://localhost:8000/api/product/item/", {
+    let response = await fetch(`${Base_URL}/product/item/`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -83,20 +84,23 @@ const ProfilePage = () => {
 
   const updateProduct = async (e) => {
     e.preventDefault();
-    let response = await fetch(`http://localhost:8000/api/product/item/${e.target.product_id.value}/`, {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: e.target.title.value,
-        description: e.target.description.value,
-        created_by: user.user_id,
-        category: e.target.category.value,
-        biding_price: e.target.amount.value,
-        ends_at: e.target.ends_at.value,
-      }),
-    });
+    let response = await fetch(
+      `${Base_URL}/product/item/${e.target.product_id.value}/`,
+      {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: e.target.title.value,
+          description: e.target.description.value,
+          created_by: user.user_id,
+          category: e.target.category.value,
+          biding_price: e.target.amount.value,
+          ends_at: e.target.ends_at.value,
+        }),
+      }
+    );
     if (response.status === 200) {
       alert("Product updated!");
       getInfo();
@@ -107,7 +111,7 @@ const ProfilePage = () => {
 
   const deleteProduct = async (id) => {
     let response = await fetch(
-      `http://localhost:8000/api/product/item/${id}/`,
+      `${Base_URL}/product/item/${id}/`,
       {
         method: "delete",
         headers: {
@@ -132,8 +136,7 @@ const ProfilePage = () => {
             <Card.Img variant="top" src="#" />
             <Card.Body>
               <Card.Title>{userInfo.fullname}</Card.Title>
-              <Card.Text>{userInfo.email}</Card.Text>
-              <Button variant="outline-success">Update</Button>
+              <Card.Text>{userInfo.email} <br /> {userInfo.phone}</Card.Text>
             </Card.Body>
           </Card>
         </Col>
@@ -208,13 +211,6 @@ const ProfilePage = () => {
                               Your Bid: ${bid.biding_amount} <br />
                               Total Bids: {bid.bid_count}
                             </Card.Text>
-                            <Button
-                              variant="outline-primary"
-                              size="sm"
-                              style={{ float: "left" }}
-                            >
-                              View
-                            </Button>
                           </Card.Body>
                         </Card>
                       </Col>

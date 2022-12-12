@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import { AuthProvider } from "./context/AuthContext";
+import PrivateRoutes from "./utils/PrivateRoutes";
 
 function App() {
   return (
@@ -13,7 +14,9 @@ function App() {
         <NavBar />
         <Routes>
           <Route element={<HomePage />} path="/"></Route>
-          <Route element={<ProfilePage />} path="/profile"></Route>
+          <Route element={<PrivateRoutes />}>
+            <Route element={<ProfilePage />} path="/profile"></Route>
+          </Route>
         </Routes>
       </AuthProvider>
     </Router>

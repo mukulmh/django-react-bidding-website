@@ -1,9 +1,9 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
+let Base_URL = "http://localhost:8000/api"
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   let loginUser = async (e) => {
     e.preventDefault();
-    let response = await fetch("http://localhost:8000/api/auth/login/", {
+    let response = await fetch(`${Base_URL}/auth/login/`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
   let registerUser = async (e) => {
     e.preventDefault();
-    let response = await fetch("http://localhost:8000/api/auth/register/", {
+    let response = await fetch(`${Base_URL}/auth/register/`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -58,6 +58,7 @@ export const AuthProvider = ({ children }) => {
         phone: e.target.phone.value,
         fullname: e.target.fullname.value,
         password: e.target.password.value,
+        // image: e.target.image.value,
       }),
     });
     let data = await response.json();
@@ -70,6 +71,31 @@ export const AuthProvider = ({ children }) => {
       alert(JSON.stringify(data));
       // console.log(JSON.stringify(data))
     }
+  //   try {
+  //     let response = await axios({
+  //       method: "post",
+  //       url: "http://localhost:8000/api/auth/register/",
+  //       data: {
+  //         email: e.target.email.value,
+  //         phone: e.target.phone.value,
+  //         fullname: e.target.fullname.value,
+  //         password: e.target.password.value,
+  //         image: "image.png",
+  //       },
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+  //     let data = await response.data;
+  //     setAuthTokens(data);
+  //     setUser(jwt_decode(data.access));
+  //     localStorage.setItem("authTokens", JSON.stringify(data));
+  //     navigate("/profile");
+  //   } catch (err) {
+  //     if (err.response) {
+  //       alert("Something went wrong!");
+  //     }
+  //   }
   };
 
   let logOutUser = () => {

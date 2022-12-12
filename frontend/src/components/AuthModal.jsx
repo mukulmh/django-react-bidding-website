@@ -117,6 +117,14 @@ const AuthModal = ({ show, setShow }) => {
                     required
                   />
                 </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    name="image"
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif"
+                  />
+                </Form.Group>
                 <Button
                   variant="secondary"
                   onClick={modalClose}

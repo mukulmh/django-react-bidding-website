@@ -5,6 +5,8 @@ import BidModal from "../components/BidModal";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 
+let Base_URL = "http://localhost:8000/api";
+
 const HomePage = () => {
   let { user } = useContext(AuthContext);
   const [products, setProducts] = useState([""]);
@@ -18,7 +20,7 @@ const HomePage = () => {
   }, []);
 
   const retrieveProducts = async () => {
-    let response = await fetch("http://localhost:8000/api/product/item/", {
+    let response = await fetch(`${Base_URL}/product/item/`, {
       method: "get",
       headers: {
         "Content-Type": "application/json",
@@ -29,13 +31,18 @@ const HomePage = () => {
     return data;
   };
 
+  const getProducts = async () => {
+    const allProducts = await retrieveProducts();
+    if (allProducts) setProducts(allProducts);
+  };
+
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
 
   const placeBid = async (e) => {
     e.preventDefault();
     let product_id = localStorage.getItem("selected");
-    let response = await fetch(`http://localhost:8000/api/product/bid/`, {
+    let response = await fetch(`${Base_URL}/product/bid/`, {
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -48,8 +55,9 @@ const HomePage = () => {
     });
     if (response.status === 201) {
       alert("Bid Placed!");
-    } else {
-      alert("something went wrong!");
+      getProducts();
+    } else if (response.status === 302) {
+      alert("Bid already placed!");
     }
   };
 

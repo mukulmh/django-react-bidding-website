@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from django.contrib import auth
 from rest_framework.views import APIView
 from app_auth.serializers import UserSerializer, LoginSerializer
@@ -10,6 +10,7 @@ from app_products.serializers import BidSerializer, ProductSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.db.models import Count
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 
@@ -36,8 +37,21 @@ def get_tokens_for_user(user):
         'access': str(refresh.access_token),
     }
 
+# class UserRegistrationView(viewsets.ModelViewSet):
+#     # parser_classes = (MultiPartParser, FormParser)
+#     serializer_class = UserSerializer
+#     def create(self, request):
+#         serializer = UserSerializer(data=request.data)
+
+#         if serializer.is_valid(raise_exception=True):
+#             user = serializer.save()
+#             token = MyTokenObtainPairSerializer.get_token(user)
+#             return Response(data={'refresh': str(token), 'access': str(token.access_token)}, status=status.HTTP_201_CREATED)
+#         return Response(data={'errors':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 class UserRegistrationView(APIView):
-    def post(self, request, format=None):
+    # parser_classes = [MultiPartParser, FormParser]
+    def post(self, request):
         serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
@@ -90,7 +104,7 @@ class UserProfileView(APIView):
                 bid_data['biding_amount'] = bid.amount
                 bid_data['starting_bid'] = bid.product.biding_price
                 data.append(bid_data)
-            print(data)
+            # print(data)
             serializer = UserSerializer(user)
             context = {'user':serializer.data,'products':product_serializer.data,'bids':data}
             products = context['products']

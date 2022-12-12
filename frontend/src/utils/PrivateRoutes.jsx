@@ -3,9 +3,9 @@ import { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 
 const PrivateRoutes = () => {
-    let user = {'logged_in': true}
+    let { user } = useContext(AuthContext);
     return(
-        user.logged_in ? <Outlet/> : <Navigate to="/login"/>
+        user ? <Outlet/> : <Navigate to="/"/>
     )
 }
 

@@ -13,9 +13,14 @@ const BidModal = ({ show, setShow, placeBid }) => {
       setShow(false);
     });
   };
+
+  const modalClose = () =>{
+    setShow(false);
+  }
+
   return (
     <>
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal show={show} onHide={modalClose} centered>
         <Modal.Body>
           <Form onSubmit={placeBid}>
             <Form.Group className="mb-3">
@@ -30,13 +35,13 @@ const BidModal = ({ show, setShow, placeBid }) => {
             </Form.Group>
             <Button
               variant="secondary"
-              onClick={handleClose}
+              onClick={modalClose}
               style={{ float: "left" }}
             >
               Cancel
             </Button>
             <Button
-            //   onClick={placeBid}
+              onClick={modalClose}
               variant="primary"
               style={{ float: "right" }}
               type="submit"

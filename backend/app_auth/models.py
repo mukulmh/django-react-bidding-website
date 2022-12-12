@@ -12,7 +12,7 @@ class MyAccoutManager(BaseUserManager):
         user = self.model(
             email = email,
             phone = phone,
-            fullname = fullname
+            fullname = fullname,
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -33,6 +33,8 @@ class MyAccoutManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+def upload_to(instance, filename):
+    return 'images/{filename}'.format(filename=filename)
 
 class Account(AbstractBaseUser):
     email = models.EmailField(max_length=100, unique=True)
@@ -44,6 +46,7 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    image = models.ImageField(upload_to=upload_to)
 
 
     USERNAME_FIELD = 'email'

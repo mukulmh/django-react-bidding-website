@@ -16,7 +16,7 @@ function NavBar() {
     <>
       <Navbar bg="light" expand="lg">
         <Container fluid>
-          <Navbar.Brand href="#">BIDxBD</Navbar.Brand>
+          <Navbar.Brand>BIDxBD</Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav
@@ -41,7 +41,7 @@ function NavBar() {
             <Navbar.Text>
               {user && (
                 <>
-                  Signed in as: <a href="#login">{user.fullname}</a>
+                  Signed in as: <b>{user.fullname}</b>
                 </>
               )}
             </Navbar.Text>

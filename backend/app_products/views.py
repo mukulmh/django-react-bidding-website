@@ -19,6 +19,7 @@ def product_list(request):
             
             product_data['id']= prod.id
             product_data['title']= prod.title
+            product_data['created_by'] = prod.created_by_id
             product_data['starting_bid'] = prod.biding_price
             product_data['ends_at'] = prod.ends_at.strftime("%d-%m-%y %H:%M:%S")
             counts = Bid.objects.all().filter(product=prod.id).values('product').annotate(total=Count('user'))
@@ -73,6 +74,11 @@ def bid_list(request):
         return Response(serializer.data)
     if request.method == 'POST':
         serializer = BidSerializer(data=request.data)
+        data = request.data
+        bid = Bid.objects.filter(user_id = data['user'], product_id = data['product'])
+        if bid.exists():
+            # bid.delete()
+            return Response("bid exists", status=status.HTTP_302_FOUND)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

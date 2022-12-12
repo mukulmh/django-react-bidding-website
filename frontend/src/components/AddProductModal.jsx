@@ -13,9 +13,13 @@ const AddProductModal = ({ show, setShow, addProduct }) => {
       setShow(false);
     });
   };
+  const modalClose = () => {
+    setShow(false);
+  };
+
   return (
     <>
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal show={show} onHide={modalClose} centered>
         <Modal.Body>
           <Form onSubmit={addProduct}>
             <Form.Group className="mb-3">
@@ -47,7 +51,9 @@ const AddProductModal = ({ show, setShow, addProduct }) => {
             <Form.Group className="mb-3">
               <Form.Label>Category</Form.Label>
               <Form.Select aria-label="Default select example" name="category">
-                <option selected disabled >Select Category</option>
+                <option selected disabled>
+                  Select Category
+                </option>
                 <option value="Cars">Cars</option>
                 <option value="Electronics">Electronics</option>
                 <option value="Others">Others</option>
@@ -55,20 +61,17 @@ const AddProductModal = ({ show, setShow, addProduct }) => {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Ending Time</Form.Label>
-              <Form.Control
-                name="ends_at"
-                type="date"
-              />
+              <Form.Control name="ends_at" type="date" />
             </Form.Group>
             <Button
               variant="secondary"
-              onClick={handleClose}
+              onClick={modalClose}
               style={{ float: "left" }}
             >
               Cancel
             </Button>
             <Button
-              //   onClick={placeBid}
+              onClick={handleClose}
               variant="primary"
               style={{ float: "right" }}
               type="submit"
