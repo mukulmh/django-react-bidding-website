@@ -5,11 +5,13 @@ import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Button from "react-bootstrap/Button";
+import profilePic from "../images/profile.png"
+import productPic from "../images/product.jpg"
 
 import AuthContext from "../context/AuthContext";
 import AddProductModal from "../components/AddProductModal";
 import UpdateProductModal from "../components/UpdateProductModal";
-let Base_URL = "http://localhost:8000/api"
+let Base_URL = "https://drfreactbid.pythonanywhere.com/api"
 
 const ProfilePage = () => {
   let { user } = useContext(AuthContext);
@@ -133,7 +135,7 @@ const ProfilePage = () => {
       <Row className="g-4 m-2">
         <Col xs={6} md={3}>
           <Card>
-            <Card.Img variant="top" src="#" />
+            <Card.Img variant="top" src={profilePic}/>
             <Card.Body>
               <Card.Title>{userInfo.fullname}</Card.Title>
               <Card.Text>{userInfo.email} <br /> {userInfo.phone}</Card.Text>
@@ -162,7 +164,7 @@ const ProfilePage = () => {
                     return (
                       <Col key={index}>
                         <Card>
-                          <Card.Img variant="top" src="holder.js/100px160" />
+                          <Card.Img variant="top" src={productPic} />
                           <Card.Body>
                             <Card.Title>{product.title}</Card.Title>
                             <Card.Text>
@@ -203,7 +205,7 @@ const ProfilePage = () => {
                     return (
                       <Col key={index}>
                         <Card>
-                          <Card.Img variant="top" src="holder.js/100px160" />
+                          <Card.Img variant="top" src={productPic} />
                           <Card.Body>
                             <Card.Title>{bid.product_title}</Card.Title>
                             <Card.Text>

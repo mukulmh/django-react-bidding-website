@@ -11,14 +11,12 @@ const AuthModal = ({ show, setShow }) => {
   function simulateNetworkRequest() {
     return new Promise((resolve) => setTimeout(resolve, 500));
   }
-  let {loginUser, registerUser } = useContext(AuthContext);
+  let { loginUser, registerUser } = useContext(AuthContext);
 
   const handleClose = () => {
     simulateNetworkRequest().then(() => {
-      let user = localStorage.getItem("authTokens");
-      if (user) {
-        setShow(false);
-      }
+      // let user = localStorage.getItem("authTokens");
+      setShow(false);
     });
   };
 

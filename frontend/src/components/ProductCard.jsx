@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import AuthContext from "../context/AuthContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import productPic from "../images/product.jpg"
 
 function ProductCard({ products, handleShow }) {
   let { user } = useContext(AuthContext);
@@ -11,7 +12,7 @@ function ProductCard({ products, handleShow }) {
     <>
       <Col key={index}>
         <Card>
-          <Card.Img variant="top" src="holder.js/100px160" />
+          <Card.Img variant="top" src={productPic} />
           <Card.Body>
             <Card.Title>{product.title}</Card.Title>
             <Card.Text>

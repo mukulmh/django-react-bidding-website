@@ -3,7 +3,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
-let Base_URL = "http://localhost:8000/api"
+let Base_URL = "https://drfreactbid.pythonanywhere.com/api"
 const AuthContext = createContext();
 
 export default AuthContext;
