@@ -5,7 +5,7 @@ import BidModal from "../components/BidModal";
 import { useContext } from "react";
 import AuthContext from "../context/AuthContext";
 
-let Base_URL = "https://drfreactbid.pythonanywhere.com/api";
+let Base_URL = "http://127.0.0.1:8000/api";
 
 const HomePage = () => {
   let { user } = useContext(AuthContext);

@@ -4,13 +4,9 @@ from app_auth.models import Account
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['email', 'phone', 'fullname', 'password']
-        extra_kwargs={
-            'password':{'write_only':True},
-        }
+        fields = ['email', 'phone', 'fullname', 'password', 'image']
 
-    def create(self, validate_data):
-        return Account.objects.create_user(**validate_data)
+
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=100)

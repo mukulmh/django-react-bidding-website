@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class MyAccoutManager(BaseUserManager):
-    def create_user(self, email, phone, fullname, password=None):
+    def create_user(self, email, phone, fullname, image, password=None):
         if not email:
             raise ValueError("User must have an email.")
         if not phone:
@@ -13,17 +13,19 @@ class MyAccoutManager(BaseUserManager):
             email = email,
             phone = phone,
             fullname = fullname,
+            image = image,
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, phone, fullname, password=None):
+    def create_superuser(self, email, phone, fullname, image, password=None):
         user = self.create_user(
             email = email,
             phone = phone,
             fullname = fullname,
             password = password,
+            image = image,
         )
 
         user.is_admin = True
@@ -32,9 +34,6 @@ class MyAccoutManager(BaseUserManager):
 
         user.save(using=self._db)
         return user
-
-def upload_to(instance, filename):
-    return 'images/{filename}'.format(filename=filename)
 
 class Account(AbstractBaseUser):
     email = models.EmailField(max_length=100, unique=True)
@@ -46,11 +45,11 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    image = models.ImageField(upload_to=upload_to)
+    image = models.ImageField(upload_to='user_images', null=True, default='media/user_images/user.png')
 
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['phone','fullname']
+    REQUIRED_FIELDS = ['phone','fullname', 'image']
 
     objects = MyAccoutManager()
 

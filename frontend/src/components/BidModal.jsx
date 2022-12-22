@@ -31,6 +31,7 @@ const BidModal = ({ show, setShow, placeBid }) => {
                 step="0.01"
                 placeholder="enter amount"
                 autoFocus
+                required
               />
             </Form.Group>
             <Button

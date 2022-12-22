@@ -36,32 +36,26 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
-
-# class UserRegistrationView(viewsets.ModelViewSet):
-#     # parser_classes = (MultiPartParser, FormParser)
-#     serializer_class = UserSerializer
-#     def create(self, request):
-#         serializer = UserSerializer(data=request.data)
-
-#         if serializer.is_valid(raise_exception=True):
-#             user = serializer.save()
-#             token = MyTokenObtainPairSerializer.get_token(user)
-#             return Response(data={'refresh': str(token), 'access': str(token.access_token)}, status=status.HTTP_201_CREATED)
-#         return Response(data={'errors':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class UserRegistrationView(APIView):
-    # parser_classes = [MultiPartParser, FormParser]
+    parser_classes = (MultiPartParser, FormParser)
     def post(self, request):
         serializer = UserSerializer(data=request.data)
 
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             user = serializer.save()
             token = MyTokenObtainPairSerializer.get_token(user)
             return Response(data={'refresh': str(token), 'access': str(token.access_token)}, status=status.HTTP_201_CREATED)
-        return Response(data={'errors':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        
+        default_errors = serializer.errors
+        errors = []
+        for field_errors in default_errors.items():
+            errors.append(field_errors[1])
+        return Response({'msg':errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class UserLoginView(APIView):
-    def post(self, request, fromat=None):
+    def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             email = serializer.data.get('email')
@@ -73,7 +67,7 @@ class UserLoginView(APIView):
             token = MyTokenObtainPairSerializer.get_token(user)
             return Response(data={'refresh': str(token), 'access': str(token.access_token)}, status=status.HTTP_200_OK)
 
-        return Response({'msg':'Email or password did not matched!'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'msg':'Email or password did not matched!'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class UserProfileView(APIView):

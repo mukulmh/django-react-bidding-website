@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
 
 const AuthModal = ({ show, setShow }) => {
@@ -12,7 +12,6 @@ const AuthModal = ({ show, setShow }) => {
     return new Promise((resolve) => setTimeout(resolve, 500));
   }
   let { loginUser, registerUser } = useContext(AuthContext);
-
   const handleClose = () => {
     simulateNetworkRequest().then(() => {
       // let user = localStorage.getItem("authTokens");
@@ -22,6 +21,47 @@ const AuthModal = ({ show, setShow }) => {
 
   const modalClose = () => {
     setShow(false);
+  };
+
+  let doLogin = async(e) => {
+    e.preventDefault()
+    let user = {
+      email: e.target.email.value,
+      password: e.target.password.value,
+    }
+    const res = await loginUser(user)
+    if (res.status === 200){
+      modalClose()
+    }
+  }
+
+  const [state, setState] = useState({
+    email: "",
+    phone: "",
+    fullname: "",
+    password: "",
+    image: null,
+  });
+
+  const handleChange = (e) => {
+    let newState = { ...state };
+    newState[e.target.name] = e.target.value;
+    setState(newState);
+  };
+
+  const handleImageChange = (e) => {
+    let newState = { ...state };
+    newState["image"] = e.target.files[0];
+    setState(newState);
+  };
+
+  const doRegistration = async(e) => {
+    e.preventDefault();
+    console.log(state);
+    const response = await registerUser(state);
+    if ( response.status === 201){
+      modalClose()
+    }
   };
 
   return (
@@ -37,7 +77,7 @@ const AuthModal = ({ show, setShow }) => {
             <Tab eventKey="sign_in" title="Sign In">
               <h3 className="text-center">Sign in with your account</h3>
               <hr />
-              <Form onSubmit={loginUser}>
+              <Form onSubmit={doLogin}>
                 <Form.Group className="mb-3">
                   <Form.Label>Email address</Form.Label>
                   <Form.Control
@@ -65,7 +105,6 @@ const AuthModal = ({ show, setShow }) => {
                   Cancel
                 </Button>
                 <Button
-                  onClick={handleClose}
                   variant="primary"
                   style={{ float: "right" }}
                   type="submit"
@@ -77,7 +116,7 @@ const AuthModal = ({ show, setShow }) => {
             <Tab eventKey="sign_up" title="Sign Up">
               <h3 className="text-center">Sign up for your account</h3>
               <hr />
-              <Form onSubmit={registerUser}>
+              <Form onSubmit={doRegistration}>
                 <Form.Group className="mb-3">
                   <Form.Label>Email address</Form.Label>
                   <Form.Control
@@ -86,6 +125,7 @@ const AuthModal = ({ show, setShow }) => {
                     placeholder="name@example.com"
                     required
                     autoFocus
+                    onChange={handleChange}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -95,6 +135,7 @@ const AuthModal = ({ show, setShow }) => {
                     type="number"
                     placeholder="01712345678"
                     required
+                    onChange={handleChange}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -104,6 +145,7 @@ const AuthModal = ({ show, setShow }) => {
                     type="text"
                     placeholder="John Doe"
                     required
+                    onChange={handleChange}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -113,6 +155,7 @@ const AuthModal = ({ show, setShow }) => {
                     type="password"
                     placeholder="Password"
                     required
+                    onChange={handleChange}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -121,6 +164,7 @@ const AuthModal = ({ show, setShow }) => {
                     name="image"
                     type="file"
                     accept="image/jpeg,image/png,image/gif"
+                    onChange={handleImageChange}
                   />
                 </Form.Group>
                 <Button
@@ -131,7 +175,6 @@ const AuthModal = ({ show, setShow }) => {
                   Cancel
                 </Button>
                 <Button
-                  onClick={handleClose}
                   variant="primary"
                   style={{ float: "right" }}
                   type="submit"

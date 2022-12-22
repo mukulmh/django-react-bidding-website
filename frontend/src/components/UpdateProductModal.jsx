@@ -61,7 +61,7 @@ const UpdateProductModal = ({
             <Form.Group className="mb-3">
               <Form.Label>Category</Form.Label>
               <Form.Select aria-label="Default select example" name="category">
-                <option selected disabled>
+                <option selected disabled value="">
                   Select Category
                 </option>
                 <option value="Cars">Cars</option>
