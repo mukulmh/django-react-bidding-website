@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from django.contrib import auth
 from rest_framework.views import APIView
-from app_auth.serializers import UserSerializer, LoginSerializer
+from app_auth.serializers import UserSerializer, LoginSerializer, UserUpdateSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from app_auth.models import Account
 from app_products.models import Bid, Product
@@ -104,3 +104,19 @@ class UserProfileView(APIView):
             products = context['products']
             return Response(context, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, id):
+        try:
+            user = Account.objects.get(pk = id)
+        except Account.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)            
+        if user is not None:
+            serializer = UserUpdateSerializer(user, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                # user.email = request.data.get('email')
+                # user.phone = request.data.get('phone')
+                # user.fullname = request.data.get('fullname')
+                # user.save()
+                return Response({"msg":"User info updated!"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

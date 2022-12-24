@@ -4,8 +4,13 @@ from app_auth.models import Account
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['email', 'phone', 'fullname', 'password', 'image']
+        fields = '__all__'
 
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['email', 'phone', 'fullname']
 
 
 class LoginSerializer(serializers.ModelSerializer):

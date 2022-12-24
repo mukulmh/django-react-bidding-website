@@ -5,13 +5,15 @@ import Row from "react-bootstrap/Row";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Button from "react-bootstrap/Button";
-import productPic from "../images/product.jpg"
+import productPic from "../images/product.jpg";
 
 import AuthContext from "../context/AuthContext";
 import AddProductModal from "../components/AddProductModal";
 import UpdateProductModal from "../components/UpdateProductModal";
-let Base_URL = "http://127.0.0.1:8000/api"
-let media_URL = "http://127.0.0.1:8000"
+import UpdateProfileModal from "../components/UpdateProfileModal";
+
+let Base_URL = "http://127.0.0.1:8000/api";
+let media_URL = "http://127.0.0.1:8000";
 
 const ProfilePage = () => {
   let { user } = useContext(AuthContext);
@@ -23,6 +25,8 @@ const ProfilePage = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const handleUpdateModal = () => setShowUpdateModal(true);
   const [temp, setTemp] = useState([""]);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const handleProfileModal = () => setShowProfileModal(true);
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -37,15 +41,12 @@ const ProfilePage = () => {
   }, []);
 
   const retrieveUserInfo = async () => {
-    let response = await fetch(
-      `${Base_URL}/auth/profile/${user.user_id}`,
-      {
-        method: "get",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    let response = await fetch(`${Base_URL}/auth/profile/${user.user_id}`, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     let data = await response.json();
     console.log(data);
     return data;
@@ -112,15 +113,12 @@ const ProfilePage = () => {
   };
 
   const deleteProduct = async (id) => {
-    let response = await fetch(
-      `${Base_URL}/product/item/${id}/`,
-      {
-        method: "delete",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    let response = await fetch(`${Base_URL}/product/item/${id}/`, {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     if (response.status === 204) {
       alert("Product deleted!");
       getInfo();
@@ -135,13 +133,25 @@ const ProfilePage = () => {
       <Row className="g-4 m-2">
         <Col xs={6} md={3}>
           <Card>
-            <Card.Img variant="top" src={media_URL + userInfo.image}/>
+            <Card.Img variant="top" src={media_URL + userInfo.image} />
             <Card.Body>
               <Card.Title>{userInfo.fullname}</Card.Title>
-              <Card.Text>{userInfo.email} <br /> {userInfo.phone}</Card.Text>
+              <Card.Text>
+                {userInfo.email} <br />
+                {userInfo.phone} <br />
+                <Button variant="outline-success" onClick={handleProfileModal}>
+                  Update Profile
+                </Button>
+              </Card.Text>
             </Card.Body>
           </Card>
         </Col>
+        <UpdateProfileModal
+          setShowProfileModal={setShowProfileModal}
+          showProfileModal={showProfileModal}
+          userInfo={userInfo}
+          getInfo={getInfo}
+        />
         <Col xs={12} md={9}>
           <Card>
             <Tabs
