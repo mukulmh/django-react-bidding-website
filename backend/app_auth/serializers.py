@@ -4,8 +4,12 @@ from app_auth.models import Account
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = '__all__'
-
+        fields = ['id', 'email', 'phone', 'fullname', 'password', 'image']
+        extra_kwargs={
+            'password':{'write_only':True},
+        }
+    def create(self, validate_data):
+        return Account.objects.create_user(**validate_data)
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
